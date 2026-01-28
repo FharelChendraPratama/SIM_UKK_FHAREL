@@ -14,51 +14,74 @@ class AspirasiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        // Hanya tampilkan yang menunggu dan proses
-        $query = Aspirasi::with(['InputAspirasi', 'siswa', 'kategori'])
-                         ->whereIn('status', ['menunggu', 'proses']);
+   public function index(Request $request)
+{
+    $query = Aspirasi::with(['InputAspirasi', 'siswa', 'kategori'])
+        ->whereIn('status', ['menunggu', 'proses']);
 
-        // Filter berdasarkan status
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        // Filter berdasarkan kategori
-        if ($request->filled('kategori_id')) {
-            $query->where('kategori_id', $request->kategori_id);
-        }
-        if ($request->filled('siswa_id')){
-            $query->where('siswa_id', $request->siswa_id);
-        }
-
-        // Search
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->whereHas('siswa', function($subQ) use ($search) {
-                    $subQ->where('nama', 'like', "%{$search}%");
-                })->orWhereHas('InputAspirasi', function($subQ) use ($search) {
-                    $subQ->where('lokasi', 'like', "%{$search}%")
-                         ->orWhere('keterangan', 'like', "%{$search}%");
-                });
-            });
-        }
-
-        $aspirasis = $query->latest()->paginate(10);
-        $kategoris = Kategori::all();
-
-        // Statistik
-        $stats = [
-            'total' => Aspirasi::count(),
-            'menunggu' => Aspirasi::where('status', 'menunggu')->count(),
-            'proses' => Aspirasi::where('status', 'proses')->count(),
-            'selesai' => Aspirasi::where('status', 'selesai')->count(),
-        ];
-
-        return view('admin.aspirasi.index', compact('aspirasis', 'kategoris', 'stats'));
+    // 🔹 Filter status
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
     }
+
+    // 🔹 Filter kategori
+    if ($request->filled('kategori_id')) {
+        $query->where('kategori_id', $request->kategori_id);
+    }
+
+    // 🔹 Filter siswa
+    if ($request->filled('siswa_id')) {
+        $query->where('siswa_id', $request->siswa_id);
+    }
+
+    // 🔹 Filter PER TANGGAL
+    if ($request->filled('tanggal')) {
+        $query->whereHas('InputAspirasi', function ($q) use ($request) {
+            $q->whereDate('tanggal', $request->tanggal);
+        });
+    }
+
+    // 🔹 Filter PER BULAN
+    if ($request->filled('bulan')) {
+        $query->whereHas('InputAspirasi', function ($q) use ($request) {
+            $q->whereMonth('tanggal', substr($request->bulan, 5, 2))
+              ->whereYear('tanggal', substr($request->bulan, 0, 4));
+        });
+    }
+
+    // 🔹 Search
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('siswa', function ($subQ) use ($search) {
+                $subQ->where('nama', 'like', "%{$search}%");
+            })->orWhereHas('InputAspirasi', function ($subQ) use ($search) {
+                $subQ->where('lokasi', 'like', "%{$search}%")
+                     ->orWhere('keterangan', 'like', "%{$search}%");
+            });
+        });
+    }
+
+    $aspirasis = $query->latest()->paginate(10)->withQueryString();
+
+    $kategoris = Kategori::all();
+    $siswas    = Siswa::orderBy('nama')->get();
+
+    // Statistik
+    $stats = [
+        'total' => Aspirasi::count(),
+        'menunggu' => Aspirasi::where('status', 'menunggu')->count(),
+        'proses' => Aspirasi::where('status', 'proses')->count(),
+        'selesai' => Aspirasi::where('status', 'selesai')->count(),
+    ];
+
+    return view('admin.aspirasi.index', compact(
+        'aspirasis',
+        'kategoris',
+        'siswas',
+        'stats'
+    ));
+}
 
     /**
      * Display the specified resource.

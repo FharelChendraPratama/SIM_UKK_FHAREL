@@ -13,6 +13,7 @@
                     <!-- form start -->
                     <form action="{{ route('admin.kategori.update', $kategori) }}" method="POST">
                         @csrf
+                        @method('PUT')
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Keterangan</label>

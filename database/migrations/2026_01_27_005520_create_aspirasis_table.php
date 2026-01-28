@@ -13,10 +13,21 @@ return new class extends Migration
     {
         Schema::create('aspirasis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('input_aspirasi_id')->constrained('input_aspirasis');
-            $table->enum('status',['menunggu','proses','selesai']);
-            $table->foreignId('siswa_id')->constrained('siswas');
-            $table->foreignId('kategori_id')->constrained('kategoris');
+
+            $table->foreignId('input_aspirasi_id')
+                ->constrained('input_aspirasis')
+                ->onDelete('cascade');
+
+            $table->enum('status', ['menunggu', 'proses', 'selesai']);
+
+            $table->foreignId('siswa_id')
+                ->constrained('siswas')
+                ->onDelete('cascade');
+
+            $table->foreignId('kategori_id')
+                ->constrained('kategoris')
+                ->onDelete('cascade');
+
             $table->string('feedback');
             $table->timestamps();
         });

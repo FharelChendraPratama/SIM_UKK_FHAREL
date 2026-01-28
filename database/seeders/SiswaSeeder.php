@@ -15,7 +15,7 @@ class SiswaSeeder extends Seeder
     {
         //
         \App\Models\Siswa::create([
-            'nama' => 'Tonggos',
+            'nama' => 'Fharel',
             'nisn' => '0099887766',
             'kelas' => 'XII',
             'jurusan' => 'RPL',

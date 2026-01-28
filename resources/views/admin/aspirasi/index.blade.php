@@ -3,6 +3,7 @@
 @section('title', 'Kelola Aspirasi')
 
 @section('content')
+    <!-- Content Header -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -11,7 +12,9 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                        </li>
                         <li class="breadcrumb-item active">Aspirasi</li>
                     </ol>
                 </div>
@@ -21,90 +24,89 @@
 
     <section class="content">
         <div class="container-fluid">
-            <!-- Statistik Cards -->
+
+            {{-- Statistik --}}
             <div class="row">
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3>{{ $stats['total'] }}</h3>
-                            <p>Total Aspirasi</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-clipboard-list"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>{{ $stats['menunggu'] }}</h3>
-                            <p>Menunggu</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-primary">
-                        <div class="inner">
-                            <h3>{{ $stats['proses'] }}</h3>
-                            <p>Sedang Diproses</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-spinner"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>{{ $stats['selesai'] }}</h3>
-                            <p>Selesai</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-check-circle"></i>
+                @php
+                    $cards = [
+                        [
+                            'bg' => 'info',
+                            'icon' => 'clipboard-list',
+                            'label' => 'Total Aspirasi',
+                            'value' => $stats['total'],
+                        ],
+                        ['bg' => 'warning', 'icon' => 'clock', 'label' => 'Menunggu', 'value' => $stats['menunggu']],
+                        [
+                            'bg' => 'primary',
+                            'icon' => 'spinner',
+                            'label' => 'Sedang Diproses',
+                            'value' => $stats['proses'],
+                        ],
+                        [
+                            'bg' => 'success',
+                            'icon' => 'check-circle',
+                            'label' => 'Selesai',
+                            'value' => $stats['selesai'],
+                        ],
+                    ];
+                @endphp
+
+                @foreach ($cards as $card)
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-{{ $card['bg'] }}">
+                            <div class="inner">
+                                <h3>{{ $card['value'] }}</h3>
+                                <p>{{ $card['label'] }}</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-{{ $card['icon'] }}"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
 
-            <!-- Filter & Table -->
+            {{-- Table & Filter --}}
             <div class="row">
                 <div class="col-12">
                     <div class="card">
+
                         <div class="card-header">
                             <h3 class="card-title">Daftar Aspirasi</h3>
                         </div>
+
                         <div class="card-body">
+
                             @if (session('success'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <div class="alert alert-success alert-dismissible fade show">
                                     {{ session('success') }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 </div>
                             @endif
 
-                            <!-- Filter Form -->
+                            {{-- Filter --}}
                             <form action="{{ route('admin.aspirasi.index') }}" method="GET" class="mb-3">
                                 <div class="row">
+
+                                    {{-- BARIS 1 --}}
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Status</label>
                                             <select name="status" class="form-control form-control-sm">
                                                 <option value="">Semua Status</option>
                                                 <option value="menunggu"
-                                                    {{ request('status') == 'menunggu' ? 'selected' : '' }}>Menunggu
-                                                </option>
+                                                    {{ request('status') == 'menunggu' ? 'selected' : '' }}>
+                                                    Menunggu</option>
                                                 <option value="proses"
-                                                    {{ request('status') == 'proses' ? 'selected' : '' }}>Sedang Diproses
-                                                </option>
+                                                    {{ request('status') == 'proses' ? 'selected' : '' }}>
+                                                    Proses</option>
                                                 <option value="selesai"
-                                                    {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                                    {{ request('status') == 'selesai' ? 'selected' : '' }}>
+                                                    Selesai</option>
                                             </select>
                                         </div>
                                     </div>
+
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Kategori</label>
@@ -119,42 +121,81 @@
                                             </select>
                                         </div>
                                     </div>
-                                    {{-- <div class="col-md-3">
+
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Siswa</label>
                                             <select name="siswa_id" class="form-control form-control-sm">
                                                 <option value="">Semua Siswa</option>
-                                                @foreach ($siswa as $siswa)
+                                                @foreach ($siswas as $siswa)
                                                     <option value="{{ $siswa->id }}"
-                                                        {{ request('siswa_id') == $kategori->id ? 'selected' : '' }}>
+                                                        {{ request('siswa_id') == $siswa->id ? 'selected' : '' }}>
                                                         {{ $siswa->nama }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div> --}}
-                                    <div class="col-md-4">
+                                    </div>
+
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Pencarian</label>
                                             <input type="text" name="search" class="form-control form-control-sm"
-                                                placeholder="Cari nama siswa atau lokasi..."
-                                                value="{{ request('search') }}">
+                                                placeholder="Nama / lokasi..." value="{{ request('search') }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label>&nbsp;</label>
-                                            <div>
-                                                <button type="submit" class="btn btn-primary btn-sm btn-block">
-                                                    <i class="fas fa-search"></i> Filter
-                                                </button>
+
+                                    {{-- BARIS 2 --}}
+                                    {{-- BARIS 2 --}}
+                                    <div class="row">
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Tanggal</label>
+                                                <input type="date" name="tanggal" class="form-control form-control-sm"
+                                                    value="{{ request('tanggal') }}">
                                             </div>
                                         </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Bulan</label>
+                                                <input type="month" name="bulan" class="form-control form-control-sm"
+                                                    value="{{ request('bulan') }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>&nbsp;</label>
+                                                <div class="input-group input-group-sm">
+                                                    <button type="submit" class="btn btn-primary btn-block">
+                                                        <i class="fas fa-search"></i> Filter
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>&nbsp;</label>
+                                                <div class="input-group input-group-sm">
+                                                    <a href="{{ route('admin.aspirasi.index') }}"
+                                                        class="btn btn-secondary btn-block">
+                                                        <i class="fas fa-sync"></i> Reset
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
+
+
                                 </div>
                             </form>
 
-                            <!-- Table -->
+
+                            {{-- Table --}}
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover">
                                     <thead>
@@ -170,9 +211,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($aspirasis as $index => $aspirasi)
+                                        @forelse ($aspirasis as $i => $aspirasi)
                                             <tr>
-                                                <td>{{ $aspirasis->firstItem() + $index }}</td>
+                                                <td>{{ $aspirasis->firstItem() + $i }}</td>
                                                 <td>{{ $aspirasi->siswa->nama ?? '-' }}</td>
                                                 <td>
                                                     <span class="badge badge-secondary">
@@ -181,7 +222,9 @@
                                                 </td>
                                                 <td>{{ $aspirasi->inputAspirasi->lokasi ?? '-' }}</td>
                                                 <td>
-                                                    {{ $aspirasi->inputAspirasi->tanggal ? \Carbon\Carbon::parse($aspirasi->inputAspirasi->tanggal)->format('d/m/Y') : '-' }}
+                                                    {{ optional($aspirasi->inputAspirasi)->tanggal
+                                                        ? \Carbon\Carbon::parse($aspirasi->inputAspirasi->tanggal)->format('d/m/Y')
+                                                        : '-' }}
                                                 </td>
                                                 <td>
                                                     <span class="badge {{ $aspirasi->status_badge }}">
@@ -190,31 +233,35 @@
                                                 </td>
                                                 <td>{{ Str::limit($aspirasi->feedback, 30) }}</td>
                                                 <td>
-                                                    <d class="btn-group">
+                                                    <div class="btn-group">
                                                         <a href="{{ route('admin.aspirasi.edit', $aspirasi->id) }}"
-                                                            class="btn btn-warning btn-sm" title="Edit">
-                                                            <i class="fas fa-edit"></i> Kelola Pengaduan
+                                                            class="btn btn-warning btn-sm">
+                                                            <i class="fas fa-edit"></i> Kelola
                                                         </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="8" class="text-center text-muted">
+                                                    Tidak ada data aspirasi
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
                             </div>
-                            </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center">Tidak ada data aspirasi</td>
-                            </tr>
-                            @endforelse
-                            </tbody>
-                            </table>
-                        </div>
 
-                        <!-- Pagination -->
-                        <div class="mt-3">
-                            {{ $aspirasis->links() }}
+                            {{-- Pagination --}}
+                            <div class="mt-3">
+                                {{ $aspirasis->links() }}
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
         </div>
     </section>
 @endsection

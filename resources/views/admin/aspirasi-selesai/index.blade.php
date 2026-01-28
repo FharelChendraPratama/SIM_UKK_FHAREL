@@ -30,6 +30,14 @@
                         <h3 class="card-title text-white">
                             <i class="fas fa-list-check"></i> Daftar Aspirasi yang Telah Diselesaikan
                         </h3>
+                        <div class="card-tools">
+                            <!-- Tombol Print dengan Parameter Filter -->
+                            <a href="{{ route('admin.aspirasi-selesai.print', request()->all()) }}"
+                               class="btn btn-light btn-sm"
+                               target="_blank">
+                                <i class="fas fa-print"></i> Print
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         @if(session('success'))
@@ -60,8 +68,8 @@
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label>Pencarian</label>
-                                        <input type="text" name="search" class="form-control form-control-sm" 
-                                               placeholder="Cari nama siswa, lokasi, atau keterangan..." 
+                                        <input type="text" name="search" class="form-control form-control-sm"
+                                               placeholder="Cari nama siswa, lokasi, atau keterangan..."
                                                value="{{ request('search') }}">
                                     </div>
                                 </div>
@@ -75,6 +83,17 @@
                                 </div>
                             </div>
                         </form>
+
+                        <!-- Info Alert -->
+                        @if(request('kategori_id') || request('search'))
+                            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                <i class="fas fa-info-circle"></i>
+                                Filter aktif. Hasil print akan mengikuti filter yang diterapkan.
+                                <button type="button" class="close" data-dismiss="alert">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                        @endif
 
                         <!-- Table -->
                         <div class="table-responsive">

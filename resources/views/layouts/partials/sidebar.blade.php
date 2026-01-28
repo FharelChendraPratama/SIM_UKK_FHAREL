@@ -57,6 +57,7 @@
                             </p>
                         </a>
                     </li>
+                    <li class="nav-header">Penyelesaian</li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-edit"></i>
@@ -79,16 +80,6 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
-                    <li class="nav-header">Penyelesaian</li>
-                    <li class="nav-item">
-                        <a href="pages/calendar.html" class="nav-link">
-                            <i class="nav-icon far fa-calendar-alt"></i>
-                            <p>
-                                Laporan
-                                <span class="badge badge-info right">Show</span>
-                            </p>
-                        </a>
                     </li>
                 </ul>
             </nav>

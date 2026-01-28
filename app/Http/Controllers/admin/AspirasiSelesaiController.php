@@ -38,6 +38,36 @@ class AspirasiSelesaiController extends Controller
         return view('admin.aspirasi-selesai.index', compact('aspirasis', 'kategoris'));
     }
 
+    public function print(Request $request)
+    {
+        $query = Aspirasi::with(['InputAspirasi', 'siswa', 'kategori'])
+                         ->where('status', 'selesai');
+
+        // Filter berdasarkan kategori
+        if ($request->filled('kategori_id')) {
+            $query->where('kategori_id', $request->kategori_id);
+        }
+
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('siswa', function($subQ) use ($search) {
+                    $subQ->where('nama', 'like', "%{$search}%");
+                })->orWhereHas('InputAspirasi', function($subQ) use ($search) {
+                    $subQ->where('lokasi', 'like', "%{$search}%")
+                         ->orWhere('keterangan', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // Ambil semua data tanpa pagination untuk print
+        $aspirasis = $query->latest('updated_at')->get();
+        $kategoris = Kategori::all();
+
+        return view('admin.aspirasi-selesai.print', compact('aspirasis', 'kategoris'));
+    }
+
     public function show(Aspirasi $aspirasi)
     {
         // Pastikan hanya yang status selesai

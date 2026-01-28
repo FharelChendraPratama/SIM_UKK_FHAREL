@@ -22,7 +22,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
    Route::resource('kategori', KategoriController::class);
    Route::resource('siswa', SiswaController::class);
    Route::resource('aspirasi', AspirasiController::class);
-   Route::resource('aspirasi-selesai', AspirasiSelesaiController::class);
+   Route::get('aspirasi-selesai', [AspirasiSelesaiController::class, 'index'])
+        ->name('aspirasi-selesai.index');
+
+    Route::get('aspirasi-selesai/print', [AspirasiSelesaiController::class, 'print'])
+        ->name('aspirasi-selesai.print');
+
 });
 
 Route::prefix('siswa')->name('siswa.')->group(function () {
