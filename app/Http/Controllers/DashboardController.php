@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     //
     public  function siswa(){
-        return view('siswa.input_aspirasi.index');
+        return view('siswa.dashboard');
     }
 
     public function admin()

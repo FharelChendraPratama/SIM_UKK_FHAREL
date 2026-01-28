@@ -46,23 +46,34 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="jurusan">Jurusan</label>
-                                <input type="text" name="jurusan"
-                                    class="form-control @error('jurusan') is-invalid @enderror" id="jurusan"
-                                    placeholder="Enter Jurusan" value="{{ old('jurusan') }}" required>
-                                @error('jurusan')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="password" name="password"
-                                    class="form-control @error('password') is-invalid @enderror" id="password"
-                                    placeholder="Enter Password" required>
-                                @error('password')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
+    <label for="jurusan">Jurusan</label>
+    <input type="text"
+        name="jurusan"
+        id="jurusan"
+        class="form-control @error('jurusan') is-invalid @enderror"
+        placeholder="Contoh: Rekayasa Perangkat Lunak"
+        value="{{ old('jurusan') }}"
+        autocomplete="off"
+        required>
+    @error('jurusan')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
+
+<div class="form-group">
+    <label for="password">Password</label>
+    <input type="password"
+        name="password"
+        id="password"
+        class="form-control @error('password') is-invalid @enderror"
+        placeholder="Masukkan password baru"
+        autocomplete="new-password"
+        required>
+    @error('password')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
+
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Simpan</button>

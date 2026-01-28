@@ -55,7 +55,7 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->route('siswa.input_aspirasi.index');
+            return redirect()->route('siswa.input_aspirasi.create');
         }
     }
     public function logout(){

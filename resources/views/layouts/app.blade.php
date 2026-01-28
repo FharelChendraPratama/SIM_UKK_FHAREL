@@ -152,6 +152,7 @@
             <!-- Control sidebar content -->
         </aside>
     </div>
+    @stack('scripts')
     <script>
 document.addEventListener('DOMContentLoaded', () => {
     const sound = document.getElementById('mangekyoSound');
